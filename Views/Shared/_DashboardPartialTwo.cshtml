@@ -1,0 +1,89 @@
+﻿@using Budget_Tracker.Models
+@model Household
+
+
+<!--Transactions-->
+<div class="card">
+    <a style="cursor: pointer" data-card-widget="collapse">
+        <div class="card-header">
+            <h3 class="card-title" style="font-weight: bold">Transactions</h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+            </div>
+        </div>
+    </a>
+    <div class="card-body">
+        <table id="transactionsTable" class="table table-bordered table-striped " style="table-layout: fixed">
+            <thead>
+                <tr>
+                    <th>Bank Account</th>
+                    <th>Budget Item</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>User</th>
+                    <th>Created</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ 
+                    var loop = 1;
+                }
+                @foreach (var transaction in Model.Transactions)
+                {
+                    var modalId = "editOrDeleteModal" + 1;
+                    <tr style="cursor: pointer" data-toggle="modal" data-target="#@modalId">
+                        <td>@transaction.BankAccount.Name</td>
+                        @if (transaction.Budget == null)
+                        {
+                            <td>N/A</td>
+                        }
+                        else
+                        {
+                            <td>@transaction.Budget.Name</td>
+                        }
+                        <td>@transaction.Type.ToString()</td>
+                        <td>$@transaction.Amount</td>
+                        <td>@transaction.Creator.FullName</td>
+                        <td>@transaction.Created</td>
+                    </tr>
+
+                    <!-- Leave Household Modal (member)-->
+                    <div id=@modalId class="modal fade">
+                        <div class="modal-dialog modal-sm">
+                            <div class="modal-content">
+                                <!-- Modal Header -->
+                                <div class="modal-header">
+                                    <div style="text-align: center" class="col">
+                                        <h3 class="modal-title" style="font-weight: bold">View or Delete?</h3>
+                                    </div>
+                                </div>
+                                <!-- Modal footer -->
+                                <div class="modal-footer">
+                                    <a class="btn btn-danger" style="width: 100%; color: white; cursor: pointer" href=@Url.Action("Delete", "Transactions", new { id = transaction.Id})>
+                                        Delete
+                                    </a>
+                                    <a class="btn btn-success" style="width: 100%; color: white; cursor: pointer" href=@Url.Action("Details", "Transactions", new { id = transaction.Id})>
+                                        View
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>Bank Account</th>
+                    <th>Budget Item</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>User</th>
+                    <th>Created</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
